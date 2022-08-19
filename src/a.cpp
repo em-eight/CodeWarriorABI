@@ -4,6 +4,7 @@ struct Simple { // Category 0: trivial
   int is1;
   void s();
   int is2;
+  Simple() { is1 = 69; }
 }; // size 0x8
 
 struct A : public Simple { // Category 1: leaf
@@ -12,6 +13,7 @@ struct A : public Simple { // Category 1: leaf
   virtual void g ();
   virtual void h ();
   int ia2;
+  A() { ia1 = 69; }
 }; // size 0x8+0x8+0x4=0x14
 
 struct SecondContainingVfs {
@@ -37,6 +39,7 @@ struct B: public virtual A {
   void f ();
   void h ();
   int ib2;
+  B() { ib1 = 69; }
 }; // size 0x14(A)+0x8(data)+0x4(vtabp)+0x4(Aoff)+0x4(unk)=0x28
 
 struct D: public virtual A, public ThirdContainingVfs {
@@ -44,13 +47,7 @@ struct D: public virtual A, public ThirdContainingVfs {
   void f();
   void h();
   int id2;
-};
-
-struct E: public B, public D, public virtual SecondContainingVfs {
-  int ie1;
-  void f();
-  void h();
-  int ie2;
+  D() { id1 = 69; }
 };
 
 struct C: public A, public SecondContainingVfs { // Category 2: Non-virtual bases only
@@ -58,7 +55,18 @@ struct C: public A, public SecondContainingVfs { // Category 2: Non-virtual base
   void f ();
   void h ();
   int ic2;
+  C() { ic1 = 69; }
 }; // size 0x14(A)+0x4(S)+0x8(data)=0x20
+
+struct E: public B, public D, public virtual SecondContainingVfs {
+  C c;
+  B b;
+  int ie1;
+  void f();
+  void h();
+  int ie2;
+  E() { ie1 = 69; }
+};
 
 void A::f() {}
 void A::g() {}
